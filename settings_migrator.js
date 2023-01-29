@@ -1,6 +1,7 @@
 const DefaultSettings = {
     cureId: 179051,
 	delay: 0,
+	pointPP: 101,
 	reUsePie: true
 }
 

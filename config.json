@@ -1,9 +1,10 @@
 {
-    "version": 1,
+    "version": 2,
     "data": {
         "enabled": false,
         "cureId": 179051,
         "delay": 0,
+        "pointPP": 101,
         "reUsePie": true
     }
 }

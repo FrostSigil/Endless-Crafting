@@ -1,13 +1,14 @@
 {
     "disableAutoUpdate": false,
     "name": "endless-crafting",
-    "author": "Sunpui / Terablecoder",
+    "author": "Sunpui / Terablecoder / FrostSigil",
     "description": "Continuously crafts the last crafted item, tracks the number of crafts and crafting crits, reuses Moongourd Pie, and uses Crafter's Cures",
     "version": "",
     "options": {
-        "settingsVersion": 2,
+        "settingsVersion": 3,
         "settingsFile": "config.json",
-        "settingsMigrator": "settings_migrator.js"
+        "settingsMigrator": "settings_migrator.js",
+        "reloadable": true
     },
     "servers": ["https://raw.githubusercontent.com/FrostSigil/Endless-Crafting/master/"]
 }

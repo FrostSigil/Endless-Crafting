@@ -39,6 +39,10 @@ module.exports = function EndlessCrafting(mod) {
 				command.message("Invalid mod.settings.delay, delay is now 0");
 			}
 		},
+		point: arg => {
+			mod.settings.pointPP = arg;
+			mod.command.message(`Use Elin's Tear when production points are below <font color="#fdff00">${mod.settings.pointPP}</font>`);
+		},
 		unlock() {
 			unlock();
 		},
@@ -139,8 +143,8 @@ module.exports = function EndlessCrafting(mod) {
 					}
 				}
 
-				if (pp < 1001) {
-					command.message("Using Elinu's Tear.");
+				if (pp < mod.settings.pointPP) {
+					command.message(`Using Elinu's Tear. ${pp}`);
 					extraDelay += 10;
 					mod.setTimeout(() => {
 						useItem(mod.settings.cureId);
