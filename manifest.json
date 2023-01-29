@@ -1,21 +1,9 @@
 {
-	"files": {
-		"config.json": {
-            "overwrite": false,
-			"hash": "f01a12f6c3a7b6f893a3909bfccda405d11a78173ea6cedec9ea03753e21f7c8"
-		},
-		"index.js": "dfc899a2d997960cb270b94d368035411fc9d9a1acbc7e98e9f6f31b12a8e71c",
-		"module.json": "bd1ff18062a378ef87b52e82134d0ab636e9b3ff83eb536209db29e0844e001e",
-		"README.md": "ecc18773cd3bc6622615d895910d0b6cf35c2f1f50028d6e24ab5759e06fe3c3",
-		"settings_migrator.js": "dbc7e0fd3fa75fa5649fe793255ee25b74dcc456230fc356ab1d677c9fe650fe"
-	},
-	"defs": {
-		"C_PLAYER_LOCATION": 5,
-		"S_ABNORMALITY_END": 1,
-		"S_FATIGABILITY_POINT": 3,
-		"C_START_PRODUCE": 1,
-		"S_PRODUCE_CRITICAL": 1,
-		"S_END_PRODUCE": 1,
-		"C_USE_ITEM": 3
-	}
+    "files": {
+        "README.md": "1e259add32488bdf79daf323169b16d8e53d74bfe4a02337e04e3aea92a191e1",
+        "config.json": "7d169b07ea0328aefb04950bfc126091dedf9dbae71f83e5b0a549376714caf3",
+        "index.js": "77161f8969b6c00bee0af25683a9c5bb2671282a2f63bb2303797ef0186f37b2",
+        "module.json": "731382e7b4d47f8b9b3375164939f64429f4821ccde7afa74b7c0aaddbfa45bc",
+        "settings_migrator.js": "4a3731309b76c0986abef5995463d3a3ee6d86477f99768052d95408ff5d3b97"
+    }
 }

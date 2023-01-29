@@ -1,5 +1,5 @@
 const DefaultSettings = {
-    cureId: 182439,
+    cureId: 179051,
 	delay: 0,
 	reUsePie: true
 }
