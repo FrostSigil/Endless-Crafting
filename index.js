@@ -145,13 +145,13 @@ module.exports = function EndlessCrafting(mod) {
 
 				if (pp < mod.settings.pointPP) {
 					command.message(`Using Elinu's Tear. ${pp}`);
-					extraDelay += 10;
+					extraDelay += 1000;
 					mod.setTimeout(() => {
 						useItem(mod.settings.cureId);
 						mod.hookOnce("S_FATIGABILITY_POINT", 3, (e) => {
 							mod.send("C_START_PRODUCE", 1, craftItem);
 						});
-					}, 5 + extraDelay);
+					}, 50 + extraDelay);
 				} else {
 					clearTimeout(timeout);
 					timeout = mod.setTimeout(() => {
