@@ -126,6 +126,8 @@ module.exports = function EndlessCrafting(mod) {
 
 			hook("S_END_PRODUCE", 1, event => {
 				if (!event.success) return;
+				const item = [6498, 6500, 6501, 152902, 155617, 179051, 179052, 181099, 181100, 182439, 211801, 211802];
+				const items = mod.game.inventory.findInBagOrPockets(item);
 				numCrafts++;
 				extraDelay = 0;
 
@@ -147,7 +149,7 @@ module.exports = function EndlessCrafting(mod) {
 					command.message(`Using Elinu's Tear. ${pp}`);
 					extraDelay += 1000;
 					mod.setTimeout(() => {
-						useItem(mod.settings.cureId);
+						useItem(items.id);
 						mod.hookOnce("S_FATIGABILITY_POINT", 3, (e) => {
 							mod.send("C_START_PRODUCE", 1, craftItem);
 						});
