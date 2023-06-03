@@ -145,15 +145,19 @@ module.exports = function EndlessCrafting(mod) {
 					}
 				}
 
-				if (pp < mod.settings.pointPP) {
-					command.message(`Using Elinu's Tear. ${pp}`);
-					extraDelay += 1000;
-					mod.setTimeout(() => {
-						useItem(items.id);
-						mod.hookOnce("S_FATIGABILITY_POINT", 3, (e) => {
-							mod.send("C_START_PRODUCE", 1, craftItem);
-						});
-					}, 50 + extraDelay);
+				if (pp < mod.settings.pointPP && pp !== null) {
+					if (items && mod.game.inventory.findAllInBagOrPockets(items.id).length !== 0) {
+						command.message(`Using Elinu's Tear. ${pp}`);
+						extraDelay += 1000;
+						mod.setTimeout(() => {
+							useItem(items.id);
+							mod.hookOnce("S_FATIGABILITY_POINT", 3, () => {
+								mod.send("C_START_PRODUCE", 1, craftItem);
+							});
+						}, 50 + extraDelay);
+					} else {
+						command.message("Not found Elinu's Tear.");
+					}
 				} else {
 					clearTimeout(timeout);
 					timeout = mod.setTimeout(() => {
