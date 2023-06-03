@@ -1,14 +1,10 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-constant-condition */
-// created by Bubble
-// rewritten by TerableCoder
-String.prototype.clr = function(hexColor) { return `<font color='#${hexColor}'>${this}</font>`;};
 
 module.exports = function EndlessCrafting(mod) {
 	const { player, entity, library } = mod.require.library;
-	const command = mod.command || mod.require.command,
-		PIE_ID = 206023,
-		PIE_AB_ID = 70264;
+	const PIE_ID = [282106, 282006, 206023];
+	const PIE_AB_ID = [690098, 690091, 70264];
 
 	mod.dispatch.addDefinition("S_FATIGABILITY_POINT", 3, [
 		["unk", "int32"],
@@ -16,11 +12,10 @@ module.exports = function EndlessCrafting(mod) {
 		["fatigability", "int32"]
 	]);
 
-	mod.game.initialize("inventory");
+	mod.game.initialize(["me.abnormalities", "inventory"]);
 
 	let craftItem = null,
 		pp = null,
-		cureDbid = 0n,
 		enabled = false,
 		timeout = null,
 		usePie = false,
@@ -29,47 +24,44 @@ module.exports = function EndlessCrafting(mod) {
 		numCrits = 0,
 		hooks = [];
 
-	command.add("craft", {
-		$none() {
+	mod.command.add("craft", {
+		$none: () => {
 			enabled = !enabled;
-			command.message(`Endless crafting module ${ enabled ? "enabled." : "disabled."}`);
+			mod.command.message(`Endless crafting module ${enabled ? "enabled." : "disabled."}`);
 			(enabled) ? load() : unload();
 			if (mod.settings.delay < 0) {
 				mod.settings.delay = 0;
-				command.message("Invalid mod.settings.delay, delay is now 0");
+				mod.command.message("Invalid mod.settings.delay, delay is now 0");
 			}
 		},
 		point: arg => {
 			mod.settings.pointPP = arg;
-			mod.command.message(`Use Elin's Tear when production points are below <font color="#fdff00">${mod.settings.pointPP}</font>`);
+			mod.mod.command.message(`Use Elin's Tear when production points are below <font color="#fdff00">${mod.settings.pointPP}</font>`);
 		},
-		unlock() {
+		unlock: () => {
 			unlock();
 		},
-		pie() {
+		pie: () => {
 			mod.settings.reUsePie = !mod.settings.reUsePie;
-			command.message(`Pie reuse is now ${ mod.settings.reUsePie}` ? "on" : "off");
+			mod.command.message(`Pie reuse is now ${mod.settings.reUsePie ? "on" : "off"}`);
 		},
-		delay(number) {
+		delay: (number) => {
 			const tempDelay = parseInt(number);
 			if (tempDelay && tempDelay >= 0) {
 				mod.settings.delay = tempDelay;
-				command.message(`Crafting delay set to ${ mod.settings.delay}`);
+				mod.command.message(`Crafting delay set to ${mod.settings.delay}`);
 			} else {
-				command.message(`Invalid crafting delay. Current delay = ${ mod.settings.delay}`);
+				mod.command.message(`Invalid crafting delay. Current delay = ${mod.settings.delay}`);
 			}
 		},
-		$default(chatLink) {
+		$default: (chatLink) => {
 			const regexId = /#(\d*)@/;
-			const regexDbid = /@(\d*)@/;
 			const id = chatLink.match(regexId);
-			const dbid = chatLink.match(regexDbid);
-			if (id && dbid) {
-				mod.settings.cureId = parseInt(id[1]); // Normal: 181100, elite: 182439
-				cureDbid = BigInt(parseInt(dbid[1]));
-				command.message(`Using pp consumable with id:${ mod.settings.cureId}`);
+			if (id) {
+				mod.settings.cureId = parseInt(id[1]);
+				mod.command.message(`Using pp consumable with id:${mod.settings.cureId}`);
 			} else {
-				command.message("Error, not a chatLink nor delay. Please type \"craft <Item>\" or \"craft delay aNumber\". Link the item with Ctrl+LMB.");
+				mod.command.message("Error, not a chatLink nor delay. Please type \"craft <Item>\" or \"craft delay aNumber\". Link the item with Ctrl+LMB.");
 			}
 		}
 	});
@@ -85,7 +77,7 @@ module.exports = function EndlessCrafting(mod) {
 	}
 
 	function doneCrafting() {
-		command.message(`You crafted ${numCrafts.toString().clr("00BFFF")} times and crit ${numCrits.toString().clr("32CD32")} times.`);
+		mod.command.message(`You crafted ${numCrafts.toString().clr("00BFFF")} times and crit ${numCrits.toString().clr("32CD32")} times.`);
 		unlock();
 	}
 
@@ -103,11 +95,12 @@ module.exports = function EndlessCrafting(mod) {
 
 	function load() {
 		if (!hooks.length) {
+			usePie = true;
 			numCrafts = 0;
 			numCrits = 0;
 
 			hook("S_ABNORMALITY_END", 1, event => {
-				if (event.id == PIE_AB_ID && mod.settings.reUsePie && mod.game.me.is(event.target)) {
+				if (PIE_AB_ID.includes(event.id) && mod.settings.reUsePie && mod.game.me.is(event.target)) {
 					usePie = true;
 				}
 			});
@@ -120,7 +113,7 @@ module.exports = function EndlessCrafting(mod) {
 				craftItem = event;
 			});
 
-			hook("S_PRODUCE_CRITICAL", 1, event => {
+			hook("S_PRODUCE_CRITICAL", 1, () => {
 				numCrits++;
 			});
 
@@ -130,24 +123,23 @@ module.exports = function EndlessCrafting(mod) {
 				const items = mod.game.inventory.findInBagOrPockets(item);
 				numCrafts++;
 				extraDelay = 0;
-
-				if (usePie) {
-					usePie = false;
-					const foundPie = mod.game.inventory.findInBagOrPockets(PIE_ID); // get Item
-					if (foundPie && foundPie.amount > 0) {
+				if (usePie && !PIE_AB_ID.includes(mod.game.me.abnormalities)) {
+					usePie = false;					
+					const foundPie	= mod.game.inventory.findInBagOrPockets(PIE_ID);
+					if (foundPie && mod.game.inventory.findAllInBagOrPockets(foundPie.id).length !== 0) {
 						extraDelay = 5000;
-						command.message("Using Moongourd Pie.");
-						mod.setTimeout(() => {
-							useItem(PIE_ID);
-						}, extraDelay / 2);
+						mod.command.message("Using Moongourd Pie.");
+						// mod.setTimeout(() => {
+							useItem(foundPie.id);
+						// }, extraDelay / 2);
 					} else {
-						command.message("You have 0 Moongourd Pies.");
+						mod.command.message("You have 0 Moongourd Pies.");
 					}
 				}
 
 				if (pp < mod.settings.pointPP && pp !== null) {
 					if (items && mod.game.inventory.findAllInBagOrPockets(items.id).length !== 0) {
-						command.message(`Using Elinu's Tear. ${pp}`);
+						mod.command.message(`Using Elinu's Tear. ${pp}`);
 						extraDelay += 1000;
 						mod.setTimeout(() => {
 							useItem(items.id);
@@ -156,7 +148,7 @@ module.exports = function EndlessCrafting(mod) {
 							});
 						}, 50 + extraDelay);
 					} else {
-						command.message("Not found Elinu's Tear.");
+						mod.command.message("Not found Elinu's Tear.");
 					}
 				} else {
 					clearTimeout(timeout);
