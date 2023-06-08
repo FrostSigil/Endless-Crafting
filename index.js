@@ -2,9 +2,10 @@
 /* eslint-disable no-constant-condition */
 
 module.exports = function EndlessCrafting(mod) {
-	const { player, entity, library } = mod.require.library;
+	const { player } = mod.require.library;
 	const PIE_ID = [282106, 282006, 206023];
-	const PIE_AB_ID = [690098, 690091, 70264];
+	const PIE_AB_ID = [690098, 690091, 70264];	
+	const Tear = [6498, 6500, 6501, 152902, 155617, 179051, 179052, 181099, 181100, 182439, 211801, 211802];
 	const elPlate = 282051;
 
 	mod.dispatch.addDefinition("S_FATIGABILITY_POINT", 3, [
@@ -122,11 +123,10 @@ module.exports = function EndlessCrafting(mod) {
 
 			hook("S_END_PRODUCE", 1, event => {
 				if (!event.success) return;
-				const item = [6498, 6500, 6501, 152902, 155617, 179051, 179052, 181099, 181100, 182439, 211801, 211802];
-				const items = mod.game.inventory.findInBagOrPockets(item);
+				const items = mod.game.inventory.findInBagOrPockets(Tear);
 				numCrafts++;
 				extraDelay = 0;
-				if (usePie && !PIE_AB_ID.includes(mod.game.me.abnormalities)) {
+				if (usePie || !PIE_AB_ID.includes(mod.game.me.abnormalities) && mod.settings.reUsePie) {
 					usePie = false;					
 					const foundPie	= mod.game.inventory.findInBagOrPockets(PIE_ID);
 					if (foundPie && mod.game.inventory.findAllInBagOrPockets(foundPie.id).length !== 0) {
@@ -145,7 +145,7 @@ module.exports = function EndlessCrafting(mod) {
 						mod.command.message(`Using Elinu's Tear. ${pp}`);
 						extraDelay += 1000;
 						mod.setTimeout(() => {
-							useItem(items.id);
+							useItem(items.id, items.dbid);
 							mod.hookOnce("S_FATIGABILITY_POINT", 3, () => {
 								mod.send("C_START_PRODUCE", 1, craftItem);
 							});
@@ -162,19 +162,19 @@ module.exports = function EndlessCrafting(mod) {
 				if (recipe === elPlate) {
 					if (pp >= 3600) return;
 					if (pp <= 750) {
-						mod.setTimeout(() => useItem(6498), 2000);
+						mod.setTimeout(() => useItem(items.id, items.dbid), 2000);
 					}
 				}
 			});
 		}
 	}
 
-	function useItem(id) {
-		if (!player)
-			return;
+	function useItem(id, dbid) {
+		if (!player) return;
 		mod.send("C_USE_ITEM", 3, {
 			gameId: mod.game.me.gameId,
 			id: id,
+			dbid: dbid,
 			amount: 1,
 			loc: player.loc,
 			w: player.loc.w,
