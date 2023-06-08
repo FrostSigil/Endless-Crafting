@@ -5,6 +5,7 @@ module.exports = function EndlessCrafting(mod) {
 	const { player, entity, library } = mod.require.library;
 	const PIE_ID = [282106, 282006, 206023];
 	const PIE_AB_ID = [690098, 690091, 70264];
+	const elPlate = 282051;
 
 	mod.dispatch.addDefinition("S_FATIGABILITY_POINT", 3, [
 		["unk", "int32"],
@@ -19,6 +20,7 @@ module.exports = function EndlessCrafting(mod) {
 		enabled = false,
 		timeout = null,
 		usePie = false,
+		recipe = null,
 		extraDelay = 0,
 		numCrafts = 0,
 		numCrits = 0,
@@ -111,6 +113,7 @@ module.exports = function EndlessCrafting(mod) {
 
 			hook("C_START_PRODUCE", 1, event => {
 				craftItem = event;
+				recipe = event.recipe;
 			});
 
 			hook("S_PRODUCE_CRITICAL", 1, () => {
@@ -155,6 +158,12 @@ module.exports = function EndlessCrafting(mod) {
 					timeout = mod.setTimeout(() => {
 						mod.send("C_START_PRODUCE", 1, craftItem);
 					}, mod.settings.delay + extraDelay);
+				}
+				if (recipe === elPlate) {
+					if (pp >= 3600) return;
+					if (pp <= 750) {
+						mod.setTimeout(() => useItem(6498), 2000);
+					}
 				}
 			});
 		}
