@@ -39,7 +39,7 @@ module.exports = function EndlessCrafting(mod) {
 		},
 		point: arg => {
 			mod.settings.pointPP = arg;
-			mod.mod.command.message(`Use Elin's Tear when production points are below <font color="#fdff00">${mod.settings.pointPP}</font>`);
+			mod.command.message(`Use Elin's Tear when production points are below <font color="#fdff00">${mod.settings.pointPP}</font>`);
 		},
 		unlock: () => {
 			unlock();
