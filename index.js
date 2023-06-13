@@ -126,7 +126,7 @@ module.exports = function EndlessCrafting(mod) {
 				const items = mod.game.inventory.findInBagOrPockets(Tear);
 				numCrafts++;
 				extraDelay = 0;
-				if (usePie || !PIE_AB_ID.includes(mod.game.me.abnormalities) && mod.settings.reUsePie) {
+				if (usePie && !PIE_AB_ID.includes(mod.game.me.abnormalities) && mod.settings.reUsePie) {
 					usePie = false;					
 					const foundPie	= mod.game.inventory.findInBagOrPockets(PIE_ID);
 					if (foundPie && mod.game.inventory.findAllInBagOrPockets(foundPie.id).length !== 0) {
