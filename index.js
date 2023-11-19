@@ -159,7 +159,7 @@ module.exports = function EndlessCrafting(mod) {
 						mod.send("C_START_PRODUCE", 1, craftItem);
 					}, mod.settings.delay + extraDelay);
 				}
-				if (recipe === elPlate) {
+				if (recipe === elPlate && items && mod.game.inventory.findAllInBagOrPockets(items.id).length !== 0) {
 					if (pp >= 3600) return;
 					if (pp <= 750) {
 						mod.setTimeout(() => useItem(items.id, items.dbid), 2000);
